@@ -25,34 +25,10 @@ abstract class BaseEmail extends Email
 
             $loader = new \Twig_Loader_String();
             $twig = new \Twig_Environment($loader);
-            $content = $twig->render($mailTemplate->content, $this->getData());
-
+            return $twig->render($mailTemplate->content, $this->getData());
         } else {    // from templates
-            $twig = kernel()->twig->env;
-            $content = $twig->loadTemplate($this->getTemplate())->render($this->getData());
+            return parent::getContent();
         }
-        return $content;
-    }
-
-    public function send() 
-    {
-        $content = $this->getContent();
-
-        if ( $this->format && $this->format === 'text/markdown' || $this->format === "markdown" ) {
-            if ( ! function_exists('Markdown') ) {
-                throw new RuntimeException('Markdown library is not loaded.');
-            }
-            $this->format = 'text/html';
-            $content = Markdown($content);
-        }
-
-        if ( $this->format ) {
-            $this->message->setBody($content,$this->format);
-        } else {
-            $this->message->setBody($content);
-        }
-        echo $this->message;
-        return kernel()->mailer->send($this->message);
     }
 }
 
