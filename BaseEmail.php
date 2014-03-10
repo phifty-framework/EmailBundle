@@ -51,7 +51,7 @@ abstract class BaseEmail extends Email
         } else {
             $this->message->setBody($content);
         }
-        
+        echo $this->message;
         return kernel()->mailer->send($this->message);
     }
 }
