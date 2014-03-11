@@ -1,0 +1,31 @@
+{# 
+    vim:filetype=htmldjango: 
+#}
+{% extends '@CRUD/edit.html' %}
+
+{% block section_body %}
+
+  <form class="ajax-action" enctype="multipart/form-data" method="POST">
+
+        {% if CRUD.Record.id %}
+            {{ forms.hidden('id', CRUD.Record.id) }}
+        {% endif %}
+
+        {{ CRUD.Action.renderSignatureWidget|raw }}
+        
+        <div class="row">
+            <div class="col-md-12">
+
+            {{CRUD.Action.renderField('title') |raw }}
+
+            {{CRUD.Action.renderField('content') |raw }}
+
+            {{CRUD.Action.renderField('handle') |raw }}
+            </div>
+            <div class="col-field">
+                {{ CRUD.Action.renderField('lang')|raw }}
+            </div>
+        </div>
+        {% include '@CRUD/controll.html' %}
+    </form>
+{% endblock %}
