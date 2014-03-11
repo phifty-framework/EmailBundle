@@ -17,8 +17,14 @@ abstract class BaseEmail extends Email
         if ( $this->useModelTemplate ) {    // from db
 
             if ( $this->templateHandle ) {
-                $mailTemplate = new EmailTemplate([ 'handle' => $this->templateHandle ]);                
-                return empty($mailTemplate->title) ? $this->defaultTitle : $mailTemplate->title;
+                $mailTemplate = new EmailTemplate([ 'handle' => $this->templateHandle ]);
+                if ( empty($mailTemplate->title)) {
+                    return $this->defaultTitle;
+                } else {
+                    $loader = new \Twig_Loader_String();
+                    $twig = new \Twig_Environment($loader);
+                    return $twig->render($mailTemplate->title, $this->getData());
+                }
             } else {
                 throw new Exception("Template handle is empty.");
             }
