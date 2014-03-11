@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+require 'main.php';
+$bundle = \EmailBundle\EmailBundle::getInstance();
+
+$importBundle = array('MemberBundle', 'UserBundle');
+
+foreach($importBundle as $folder) {
+  // email template 的路徑在 bundleName/Templates/email/
+  $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
+
+  foreach (new DirectoryIterator($folderPath) as $fileInfo) {
+    if($fileInfo->isDot()) continue;
+
+    // 再根據 I18N 逐一載入
+    if($fileInfo->isDir()) {
+      
+      $lang = $fileInfo->getFilename();
+
+      foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
+        if($subFileInfo->isDot()) continue;
+        $handle = $subFileInfo->getBasename('.html');
+        $content = file_get_contents($subFileInfo->getPathname());
+        
+        $record = new \EmailBundle\Model\EmailTemplate;
+        $ret = $record->loadOrCreate([
+          'content' => $content,
+          'handle' => $handle,
+          'lang' => $lang
+          ], array('handle', 'lang'));
+
+        echo implode('-', array($ret->id, $folder, $lang, $handle)) . "\n";
+      }
+    }
+  }
+}
+

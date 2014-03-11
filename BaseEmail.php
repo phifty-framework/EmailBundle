@@ -17,7 +17,11 @@ abstract class BaseEmail extends Email
         if ( $this->useModelTemplate ) {    // from db
 
             if ( $this->templateHandle ) {
-                $mailTemplate = new EmailTemplate([ 'handle' => $this->templateHandle ]);
+                $lang = $member->lang ?: kernel()->locale->current();
+                $mailTemplate = new EmailTemplate(array( 
+                    'handle' => $this->templateHandle, 
+                    'lang' => $lang 
+                ));
                 if ( empty($mailTemplate->title)) {
                     return $this->defaultTitle;
                 } else {
@@ -38,7 +42,11 @@ abstract class BaseEmail extends Email
         if ( $this->useModelTemplate ) {    // from db
 
             if ( $this->templateHandle ) {
-                $mailTemplate = new EmailTemplate([ 'handle' => $this->templateHandle ]);
+                $lang = $member->lang ?: kernel()->locale->current();
+                $mailTemplate = new EmailTemplate(array( 
+                    'handle' => $this->templateHandle, 
+                    'lang' => $lang 
+                ));
             } else {
                 throw new Exception("Template handle is empty.");
             }
