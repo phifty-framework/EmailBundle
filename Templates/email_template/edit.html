@@ -1,31 +1,67 @@
-{# 
-    vim:filetype=htmldjango: 
-#}
 {% extends '@CRUD/edit.html' %}
-
 {% block section_body %}
+{% set bundle = Kernel.bundle('EmailBundle') %}
+<style type="text/css">
+#aceEditor{{frag_serial}} {
+    position: relative;
+    width: 95%;
+    height: 320px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+</style>
+<form id="form{{frag_serial}}" class="ajax-action" enctype="multipart/form-data" method="POST">
+    {% if CRUD.Record.id %}
+        {{ forms.hidden('id', CRUD.Record.id) }}
+    {% endif %}
 
-  <form class="ajax-action" enctype="multipart/form-data" method="POST">
+    {{ CRUD.Action.renderSignatureWidget|raw }}
 
-        {% if CRUD.Record.id %}
-            {{ forms.hidden('id', CRUD.Record.id) }}
-        {% endif %}
+    <div class="row">
+        <div class="col-md-10">
 
-        {{ CRUD.Action.renderSignatureWidget|raw }}
-        
-        <div class="row">
-            <div class="col-md-12">
+        {{ CRUD.Action.renderField('title',{ size: 35 })|raw }}
 
-            {{CRUD.Action.renderField('title') |raw }}
+        <div class="col-field">
+            {{ CRUD.Action.renderField('handle',{ size: 24 })|raw }}
+        </div>
 
-            {{CRUD.Action.renderField('content') |raw }}
-
-            {{CRUD.Action.renderField('handle') |raw }}
-            </div>
+        {% if Kernel.bundle('I18N') and bundle.config('with_lang') %}
             <div class="col-field">
                 {{ CRUD.Action.renderField('lang')|raw }}
             </div>
+        {% endif %}
+
+        <div class="clear"> </div>
+
+        <div id="aceEditor{{frag_serial}}">{{ CRUD.Record.content |raw }}</div>
+
+        {{ CRUD.Action.renderField('content',null, { id: 'textarea' ~ frag_serial, style: 'display: none;' })|raw}}
+
+        <div class="clear"> </div>
+
+
+
+        <div class="collapsible collapse-section">
+            <h3>其他資訊</h3>
+            <div>
+                {% include '@CRUD/metadata.html' %}
+            </div>
         </div>
-        {% include '@CRUD/controll.html' %}
-    </form>
+    </div>
+
+<script>
+var editor = ace.edit("aceEditor{{frag_serial}}");
+editor.setTheme("ace/theme/monokai");
+editor.getSession().setMode("ace/mode/twig");
+editor.getSession().on('change', function(){
+    $('#textarea{{frag_serial}}').val(editor.getSession().getValue());
+});
+</script>
+
+    <div class="clear"></div>
+    {% include '@CRUD/controll.html' %}
+</form>
+<div class="clear"> </div>
+
 {% endblock %}
