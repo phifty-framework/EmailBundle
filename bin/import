@@ -1,13 +1,14 @@
 #!/usr/bin/env php
 <?php
 require 'main.php';
-$bundle = \EmailBundle\EmailBundle::getInstance();
+// $bundle = \EmailBundle\EmailBundle::getInstance();
 
-$importBundle = array('MemberBundle', 'UserBundle');
+$bundleClasses = array('MemberBundle', 'UserBundle');
 
-foreach($importBundle as $folder) {
+foreach($bundleClasses as $bundleClass) {
   // email template 的路徑在 bundleName/Templates/email/
-  $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
+  $bundle = kernel()->bundle( $bundleClass );
+  $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
 
   foreach (new DirectoryIterator($folderPath) as $fileInfo) {
     if($fileInfo->isDot()) continue;
@@ -29,7 +30,7 @@ foreach($importBundle as $folder) {
           'lang' => $lang
           ], array('handle', 'lang'));
 
-        echo implode('-', array($ret->id, $folder, $lang, $handle)) . "\n";
+        echo implode('-', array($bundleClass, $lang, $handle, $ret->id ? "created" : "exists.")) . "\n";
       }
     }
   }
