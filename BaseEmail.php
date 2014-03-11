@@ -18,7 +18,7 @@ abstract class BaseEmail extends Email
 
             if ( $this->templateHandle ) {
                 $mailTemplate = new EmailTemplate([ 'handle' => $this->templateHandle ]);                
-                return empty($mailTemplate->subject) ? $this->defaultTitle : $mailTemplate->subject;
+                return empty($mailTemplate->title) ? $this->defaultTitle : $mailTemplate->title;
             } else {
                 throw new Exception("Template handle is empty.");
             }

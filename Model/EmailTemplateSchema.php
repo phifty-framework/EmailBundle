@@ -5,9 +5,9 @@ use LazyRecord\Schema\SchemaDeclare;
 class EmailTemplateSchema extends SchemaDeclare
 {
     function schema() {
-      $this->column('subject')
+      $this->column('title')
             ->varchar(128)
-            ->label( '信件主旨' );
+            ->label( '信件標題' );
 
         $this->column('content')
             ->text()
