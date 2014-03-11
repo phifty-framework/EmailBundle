@@ -1,0 +1,24 @@
+{# 
+    vim:filetype=htmldjango: 
+#}
+{% extends '@CRUD/edit.html' %}
+
+{% block section_body %}
+
+  <form class="ajax-action" enctype="multipart/form-data" method="POST">
+
+        {% if CRUD.Record.id %}
+            {{ forms.hidden('id', CRUD.Record.id) }}
+        {% endif %}
+
+        <div class="divider"> </div>
+
+        {{CRUD.Action.renderField('title') |raw }}
+
+        {{CRUD.Action.renderField('content') |raw }}
+
+        {{CRUD.Action.renderField('content') |raw }}
+
+        {% include '@CRUD/controll.html' %}
+    </form>
+{% endblock %}
