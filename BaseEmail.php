@@ -12,15 +12,19 @@ abstract class BaseEmail extends Email
 
     public $defaultTitle;
 
+    public $lang;
+
     public function getTitle() {
 
         if ( $this->useModelTemplate ) {    // from db
 
             if ( $this->templateHandle ) {
-                $lang = $member->lang ?: kernel()->locale->current();
+                if(!$this->lang) {
+                    $this->lang = kernel()->locale->current();
+                }
                 $mailTemplate = new EmailTemplate(array( 
                     'handle' => $this->templateHandle, 
-                    'lang' => $lang 
+                    'lang' => $this->lang 
                 ));
                 if ( empty($mailTemplate->title)) {
                     return $this->defaultTitle;
@@ -42,10 +46,12 @@ abstract class BaseEmail extends Email
         if ( $this->useModelTemplate ) {    // from db
 
             if ( $this->templateHandle ) {
-                $lang = $member->lang ?: kernel()->locale->current();
+                if(!$this->lang) {
+                    $this->lang = kernel()->locale->current();
+                }
                 $mailTemplate = new EmailTemplate(array( 
                     'handle' => $this->templateHandle, 
-                    'lang' => $lang 
+                    'lang' => $this->lang 
                 ));
             } else {
                 throw new Exception("Template handle is empty.");
