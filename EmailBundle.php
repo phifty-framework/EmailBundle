@@ -15,20 +15,10 @@ class EmailBundle extends Bundle
     public function init() 
     {
         $this->expandRoute('/bs/email_template', 'EmailTemplateCRUDHandler');
-        /*
-        $this->expandRoute( '/bs/product_resource', 'ProductResourceCRUDHandler' );
-        if ( $this->config('with_agency_products') ) {
-            $this->expandRoute( '/bs/agency_product', '\\Product\\AgencyProductCRUD' );
+        if ( $this->config('Management') ) {
+            kernel()->event->register( 'adminui.init_menu' , function($menu) {
+                $menu->createCrudMenuItem( 'email_template', _('Email 管理') );
+            });
         }
-        if ( $this->config('with_types') ) {
-            $this->expandRoute( '/bs/product_type', '\\Product\\ProductTypeCRUDHandler' );
-        }
-
-        $this->route( '/bs/product/api/delete_spec/{schemaId}' , 'SpecDataController:deleteSchemaAndData' );
-
-        $this->addCRUDAction( 'Category' , array('Create','Update','Delete','BulkDelete') );
-        $this->addCRUDAction( 'Product' , array('BulkDelete') );
-        */
     }
-
 }
