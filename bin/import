@@ -8,14 +8,15 @@ foreach($bundleClasses as $bundleClass) {
     $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
 
     foreach (new DirectoryIterator($folderPath) as $fileInfo) {
-        if($fileInfo->isDot()) continue;
+        if($fileInfo->isDot())
+            continue;
 
         // 再根據 I18N 逐一載入
-        if($fileInfo->isDir()) {
+        if( ! $fileInfo->isDir()) {
             continue;
         }
-        $lang = $fileInfo->getFilename();
 
+        $lang = $fileInfo->getFilename();
         foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
             if($subFileInfo->isDot()) continue;
             $handle = $subFileInfo->getBasename('.html');
