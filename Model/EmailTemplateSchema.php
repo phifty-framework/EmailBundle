@@ -18,6 +18,16 @@ class EmailTemplateSchema extends SchemaDeclare
             ))
             ;
 
+        $this->column('content_type')
+            ->varchar(12)
+            ->label( '信件格式' )
+            ->validValues(array( 
+                'HTML' => 'text/html',
+                '純文字' => 'text/plain',
+                'Markdown' => 'text/markdown',
+            ))
+            ;
+
         $this->column('handle')
             ->varchar(256)
             ->label('操作符')
