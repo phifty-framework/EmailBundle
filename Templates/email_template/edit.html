@@ -34,6 +34,8 @@
 
         <div class="clear"> </div>
 
+        {{CRUD.Action.renderField('content_type')|raw}}
+
         <div id="aceEditor{{frag_serial}}">{{ CRUD.Record.content |raw }}</div>
 
         {{ CRUD.Action.renderField('content',null, { id: 'textarea' ~ frag_serial, style: 'display: none;' })|raw}}
