@@ -1,38 +1,34 @@
 #!/usr/bin/env php
 <?php
 require 'main.php';
-// $bundle = \EmailBundle\EmailBundle::getInstance();
-
 $bundleClasses = array('MemberBundle', 'UserBundle');
-
 foreach($bundleClasses as $bundleClass) {
-  // email template 的路徑在 bundleName/Templates/email/
-  $bundle = kernel()->bundle( $bundleClass );
-  $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
+    // email template 的路徑在 bundleName/Templates/email/
+    $bundle = kernel()->bundle( $bundleClass );
+    $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
 
-  foreach (new DirectoryIterator($folderPath) as $fileInfo) {
-    if($fileInfo->isDot()) continue;
+    foreach (new DirectoryIterator($folderPath) as $fileInfo) {
+        if($fileInfo->isDot()) continue;
 
-    // 再根據 I18N 逐一載入
-    if($fileInfo->isDir()) {
-      
-      $lang = $fileInfo->getFilename();
+        // 再根據 I18N 逐一載入
+        if($fileInfo->isDir()) {
+            continue;
+        }
+        $lang = $fileInfo->getFilename();
 
-      foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
-        if($subFileInfo->isDot()) continue;
-        $handle = $subFileInfo->getBasename('.html');
-        $content = file_get_contents($subFileInfo->getPathname());
-        
-        $record = new \EmailBundle\Model\EmailTemplate;
-        $ret = $record->loadOrCreate([
-          'content' => $content,
-          'handle' => $handle,
-          'lang' => $lang
-          ], array('handle', 'lang'));
+        foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
+            if($subFileInfo->isDot()) continue;
+            $handle = $subFileInfo->getBasename('.html');
+            $content = file_get_contents($subFileInfo->getPathname());
+            $record = new \EmailBundle\Model\EmailTemplate;
+            $ret = $record->loadOrCreate([
+                'content' => $content,
+                'handle' => $handle,
+                'lang' => $lang
+                ], array('handle', 'lang'));
 
-        echo implode('-', array($bundleClass, $lang, $handle, $ret->id ? "created" : "exists.")) . "\n";
-      }
+            echo implode('-', array($bundleClass, $lang, $handle, $ret->id ? "created" : "exists.")) . "\n";
+        }
     }
-  }
 }
 
