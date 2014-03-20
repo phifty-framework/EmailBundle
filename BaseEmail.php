@@ -9,6 +9,8 @@ use Twig_Loader_Chain;
 use Twig_Environment;
 use Twig_Loader_String;
 
+class EmailException extends Exception { }
+
 abstract class BaseEmail extends Email
 {
 
@@ -57,7 +59,7 @@ abstract class BaseEmail extends Email
 
         if ( $this->useModelTemplate ) {    // from db
             if ( ! $this->templateHandle ) {
-                throw new Exception("Template handle is not defined.");
+                throw new EmailException("Template handle is not defined.");
             }
             $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
             if ( $mailTemplate && $mailTemplate->title ) {
@@ -74,7 +76,7 @@ abstract class BaseEmail extends Email
         }
 
         if ( ! $this->templateHandle ) {
-            throw new Exception("Template handle is empty.");
+            throw new EmailException("Template handle is empty.");
         }
 
         $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
@@ -104,12 +106,12 @@ abstract class BaseEmail extends Email
     public function getTemplateSubPath() {
         $ro = new ReflectionObject($this);
         $args = explode('\\',$ro->getNamespaceName());
+        if ( empty($args) || ! isset($args[0]) ) {
+            throw new EmailException("Wrong Namespace For Email template path.");
+        }
         $topNs = $args[0]; // top level namespace
         return join('/','email', '@' . $topNs, $lang, $this->templateHandle . '.html');
     }
 }
-
-
-
 
 
