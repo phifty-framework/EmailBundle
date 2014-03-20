@@ -30,7 +30,7 @@ abstract class BaseEmail extends Email
     public $lang;
 
     public static function loadTemplateRecord($handle, $lang = null) {
-        $lang = $lang ?: kernel()->locale->current();
+        $lang = $this->getLang();
         $record = new EmailTemplate(array( 
             'handle' => $handle,
             'lang' => $lang, 
@@ -39,6 +39,10 @@ abstract class BaseEmail extends Email
             return $record;
         }
         return null;
+    }
+
+    public function getLang() {
+        return $this->lang ?: kernel()->locale->current();
     }
 
 
@@ -112,7 +116,7 @@ abstract class BaseEmail extends Email
             throw new EmailException("Wrong Namespace For Email template path.");
         }
         $topNs = $args[0]; // top level namespace
-        return join('/','email', '@' . $topNs, $lang, $this->templateHandle . '.html');
+        return join('/',array('@' . $topNs, 'email', $this->getLang(), $this->templateHandle . '.html') );
     }
 }
 
