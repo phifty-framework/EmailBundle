@@ -29,6 +29,7 @@ foreach($bundleClasses as $bundleClass) {
 
             // parse title from content
             $title = null;
+            $comment = "Imported from " . $subFileInfo->getPathname();
 
             // parse annotation block...
             if ( preg_match('/^{#\s+(.*?)\s*#}/is', $content, $matches) ) {
