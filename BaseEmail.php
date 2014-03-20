@@ -69,38 +69,29 @@ abstract class BaseEmail extends Email
 
     public function getContent()
     {
-        if ( $this->useModelTemplate ) {    // from db
-
-            if ( $this->templateHandle ) {
-                if(!$this->lang) {
-                    $this->lang = kernel()->locale->current();
-                }
-                $mailTemplate = new EmailTemplate(array( 
-                    'handle' => $this->templateHandle, 
-                    'lang' => $this->lang 
-                ));
-            } else {
-                throw new Exception("Template handle is empty.");
-            }
-
-            $fsLoader = kernel()->twig->loader;   // framework 提供的 file system loader
-
-            // a custom array loader with email.html template
-            $arrayLoader = new Twig_Loader_Array(array(
-                'email.html' => $mailTemplate->content
-            ));
-            
-            // 把 arrayLoader 跟 fsLoader 丟給 chainLoader
-            $chainLoader = new Twig_Loader_Chain(array($fsLoader, $arrayLoader));
-
-            // 另外 create 一個新的 twig environment
-            $twig = new \Twig_Environment($chainLoader);
-
-            return $twig->render('email.html',  $this->getData());
-
-        } else {    // from templates
+        if ( ! $this->useModelTemplate ) {    // from db
             return parent::getContent();
         }
+
+        if ( ! $this->templateHandle ) {
+            throw new Exception("Template handle is empty.");
+        }
+
+        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
+        $fsLoader = kernel()->twig->loader;   // framework 提供的 file system loader
+
+        // a custom array loader with _email.html template
+        // the "_email.html" must be unique
+        $arrayLoader = new Twig_Loader_Array(array(
+            '_email.html' => $mailTemplate->content
+        ));
+        
+        // lookup template from the array loader first, then the file system loader.
+        $chainLoader = new Twig_Loader_Chain(array($arrayLoader, $fsLoader));
+
+        // create another twig environment for this chained loader.
+        $twig = new Twig_Environment($chainLoader);
+        return $twig->render('_email.html',  $this->getData());
     }
 
     /**
