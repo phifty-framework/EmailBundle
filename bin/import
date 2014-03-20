@@ -20,13 +20,22 @@ foreach($bundleClasses as $bundleClass) {
         // 再根據 I18N 逐一載入
         $lang = $fileInfo->getFilename();
         foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
-            if ($subFileInfo->isDot())
+            if ($subFileInfo->isDot()) {
                 continue;
+            }
 
             $handle = $subFileInfo->getBasename('.html');
             $content = file_get_contents($subFileInfo->getPathname());
+
+            // parse title from content
+            $title = null;
+            if ( preg_match('/^{#\s+title:\s*"(.*?)"\s*#}/is',$content, $regs) ) {
+                $title = $regs[1];
+            }
+
             $record = new EmailTemplate;
             $ret = $record->loadOrCreate([
+                'title'   => $title,
                 'content' => $content,
                 'handle'  => $handle,
                 'lang'    => $lang
