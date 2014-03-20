@@ -29,6 +29,27 @@ abstract class BaseEmail extends Email
      */
     public $lang;
 
+    public $bundle;
+
+    public function __construct() {
+        parent::__construct();
+        $this->bundle = $this->findBundle();
+        if ( $this->bundle ) {
+            $this->useModelTemplate = $this->bundle->config('UseModelTemplate');
+        }
+    }
+
+
+    // find bundle object
+    public function findBundle() {
+        $ro = new ReflectionObject($this);
+        $args = explode('\\',$ro->getNamespaceName());
+        if ( count($args) > 0 ) {
+            $ns = $args[0];
+            return kernel()->bundle($ns);
+        }
+    }
+
     public static function loadTemplateRecord($handle, $lang = null) {
         $lang = $this->getLang();
         $record = new EmailTemplate(array( 
