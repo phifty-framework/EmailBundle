@@ -41,7 +41,13 @@ foreach($bundleClasses as $bundleClass) {
                 'lang'    => $lang
                 ], array('handle', 'lang'));
 
-            echo implode('-', array($bundleClass, $lang, $handle, $ret->id ? "created" : "exists.")) . "\n";
+            // echo $bundleClass . ' - ' . $handle . ' for ' . $lang . ' ' . ($ret->id ? "created" : "exists") . "\n";
+            printf("% 16s: % -20s - %s => %s\n",
+                $bundleClass,
+                $title ? "$title ($handle)" : $handle,
+                $lang,
+                ($ret->id ? "created" : "exists")
+            );
         }
     }
 }
