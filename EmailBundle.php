@@ -21,4 +21,39 @@ class EmailBundle extends Bundle
             });
         }
     }
+
+    public function getSystemMail() {
+        $mailConfig = kernel()->config->get('framework','Mail');
+        if ( isset($mailConfig['System']) ) {
+            $mail = $mailConfig['System'];
+            if( preg_match( '#"?(.*?)"??\s+<(.*?)>#i', $mail, $regs) ) {
+                return array( $regs[2] => $regs[1] );
+            } else {
+                return array(
+                    $mail => kernel()->getApplicationName(),
+                );
+            }
+        }
+        // the default mailer
+        return array(
+            'no-reply@' . kernel()->getHost() => kernel()->getApplicationName(),
+        );
+    }
+
+    public function getAdminMail() {
+        $mailConfig = kernel()->config->get('framework','Mail');
+        if ( isset($mailConfig['Admin']) ) {
+            $mail = $mailConfig['Admin'];
+            if( preg_match( '#"?(.*?)"??\s+<(.*?)>#i' , $mail ,$regs ) ) {
+                return array(
+                    /* address => name */
+                    $regs[2] => $regs[1],
+                );
+            } else {
+                return array( $mail => 'Administrator' );
+            }
+        }
+        throw new Exception('The Email address of Administrator is not defined.');
+    }
+
 }
