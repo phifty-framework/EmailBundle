@@ -1,0 +1,41 @@
+{#
+vim:filetype=htmldjango:sw=4:et:
+#}
+<style>
+.mail {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+    font-weight: 300;
+};
+.mail a { color: {{themeForeground}}; }
+</style>
+<div class="mail">
+{% set themeBackground  = "#d0d0d0" %}
+{% set themeForeground  = "#666" %}
+{% set contentTextColor = "#666" %}
+<table border="0" cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid {{themeBackground}};">
+    <tr bgcolor="{{themeBackground}}">
+        <td style="padding: 10px 20px;">
+            <h1 style="font-size: 1.4em; margin: 0; padding: 0; color: {{themeForeground}}; font-weight: 500">{{title}}</h1>
+        </td>
+    </tr>
+    <tr>
+        <td style="font-size: 1em; color: {{contentTextColor}}; padding: 20px; line-height: 180%; font-weight: 500;">
+        {% block content %}
+            {{content|raw}}
+        {% endblock %}
+        </td>
+    </tr>
+    <tr bgcolor="{{themeBackground}}">
+        <td>
+            <table width="100%">
+            <td style="font-size: 0.9em; text-align: left; color: {{themeForeground}}; padding: 10px 20px;">
+                <a style="color: {{themeForeground}};" href="{{Kernel.getBaseUrl()}}">{{Kernel.getApplicationName()}}</a>
+            </td>
+            <td style="font-size: 0.9em; text-align: right; color: {{themeForeground}}; padding: 10px 20px;">
+                Powered by <a style="color: {{themeForeground}};" href="http://lart-asia.com">LART-ASIA</a>
+            </td>
+            </table>
+        </td>
+    </tr>
+</table>
+</div>
