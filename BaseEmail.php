@@ -66,7 +66,7 @@ abstract class BaseEmail extends Email
 
     public function renderContent()
     {
-        if ( ! $this->useModelTemplate ) {    // from db
+        if ( ! $this->useModelTemplate ) {    // from file system
             return parent::renderContent();
         }
 
@@ -83,7 +83,7 @@ abstract class BaseEmail extends Email
         // a custom array loader with _email.html template
         // the "_email.html" must be unique
         $arrayLoader = new Twig_Loader_Array(array(
-            '_email.html' => $mailTemplate->content
+            '_email.html' => $mailTemplate->content,
         ));
         
         // lookup template from the array loader first, then the file system loader.
@@ -92,6 +92,10 @@ abstract class BaseEmail extends Email
         // create another twig environment for this chained loader.
         $twig = new Twig_Environment($chainLoader);
         return $twig->render('_email.html',  $this->getData());
+    }
+
+    public function template() {
+        return $this->getTemplateSubPath();
     }
 
     /**
