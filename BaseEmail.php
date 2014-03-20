@@ -37,29 +37,34 @@ abstract class BaseEmail extends Email
      */
     public $lang;
 
+    public static function loadTemplateRecord($handle, $lang = null) {
+        $lang = $lang ?: kernel()->locale->current();
+        $record = new EmailTemplate(array( 
+            'handle' => $handle,
+            'lang' => $lang, 
+        ));
+        if ( $record->id ) {
+            return $record;
+        }
+        return null;
+    }
+
     public function getTitle() {
+        $loader = new Twig_Loader_String();
+        $twig = new Twig_Environment($loader);
+
+        $titleTemplate = $this->defaultTitle;
+
         if ( $this->useModelTemplate ) {    // from db
-            if ( $this->templateHandle ) {
-                // get the current locale as it's handle.
-                if(!$this->lang) {
-                    $this->lang = kernel()->locale->current();
-                }
-                $mailTemplate = new EmailTemplate(array( 
-                    'handle' => $this->templateHandle, 
-                    'lang' => $this->lang 
-                ));
-                if ( empty($mailTemplate->title)) {
-                    return $this->defaultTitle;
-                } else {
-                    $loader = new Twig_Loader_String();
-                    $twig = new Twig_Environment($loader);
-                    return $twig->render($mailTemplate->title, $this->getData());
-                }
-            } else {
-                throw new Exception("Template handle is empty.");
+            if ( ! $this->templateHandle ) {
+                throw new Exception("Template handle is not defined.");
+            }
+            $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
+            if ( $mailTemplate && $mailTemplate->title ) {
+                $titleTemplate = $mailTemplate->title;
             }
         }
-        return $this->defaultTitle;
+        return $twig->render($titleTemplate, $this->getData());
     }
 
     public function getContent()
