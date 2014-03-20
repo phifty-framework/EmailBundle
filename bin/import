@@ -29,7 +29,7 @@ foreach($bundleClasses as $bundleClass) {
 
             // parse title from content
             $title = null;
-            $comment = "Imported from " . $subFileInfo->getPathname();
+            $comment = "Imported from " . $subFileInfo->getBasename();
 
             // parse annotation block...
             if ( preg_match('/^{#\s+(.*?)\s*#}/is', $content, $matches) ) {
@@ -44,7 +44,7 @@ foreach($bundleClasses as $bundleClass) {
 
 
             $record = new EmailTemplate;
-            $ret = $record->loadOrCreate([
+            $record->createOrUpdate([
                 'title'   => $title,
                 'content' => $content,
                 'handle'  => $handle,
@@ -52,12 +52,10 @@ foreach($bundleClasses as $bundleClass) {
                 'lang'    => $lang
                 ], array('handle', 'lang'));
 
-            // echo $bundleClass . ' - ' . $handle . ' for ' . $lang . ' ' . ($ret->id ? "created" : "exists") . "\n";
-            printf("% 16s: % -20s - %s => %s\n",
+            printf("Importing %s: % -20s - %s\n",
                 $bundleClass,
                 $title ? "$title ($handle)" : $handle,
-                $lang,
-                ($ret->id ? "created" : "exists")
+                $lang
             );
         }
     }
