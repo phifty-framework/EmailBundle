@@ -33,7 +33,7 @@ abstract class BaseEmail extends Email
 
     public function __construct() {
         parent::__construct();
-        $this->bundle = $this->findBundle();
+        $this->bundle = $this->getBundleInstance();
         if ( $this->bundle ) {
             $this->useModelTemplate = $this->bundle->config('UseModelTemplate');
         }
@@ -41,7 +41,7 @@ abstract class BaseEmail extends Email
 
 
     // find bundle object
-    public function findBundle() {
+    public function getBundleInstance() {
         $ro = new ReflectionObject($this);
         $args = explode('\\',$ro->getNamespaceName());
         if ( count($args) > 0 ) {
