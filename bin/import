@@ -29,15 +29,25 @@ foreach($bundleClasses as $bundleClass) {
 
             // parse title from content
             $title = null;
-            if ( preg_match('/^{#\s+title:\s*"(.*?)"\s*#}/is',$content, $regs) ) {
-                $title = $regs[1];
+
+            // parse annotation block...
+            if ( preg_match('/^{#\s+(.*?)\s*#}/is', $content, $matches) ) {
+                $annotations = $matches[1];
+                if ( preg_match('/title:\s*"(.*?)"/is', $annotations, $matches) ) {
+                    $title = $matches[1];
+                }
+                if ( preg_match('/comment:\s*"(.*?)"/is', $annotations, $matches) ) {
+                    $comment = $matches[1];
+                }
             }
+
 
             $record = new EmailTemplate;
             $ret = $record->loadOrCreate([
                 'title'   => $title,
                 'content' => $content,
                 'handle'  => $handle,
+                'comment' => $comment,
                 'lang'    => $lang
                 ], array('handle', 'lang'));
 

@@ -9,9 +9,10 @@ class EmailTemplateCRUDHandler extends CRUDHandler
     public $modelClass = 'EmailBundle\Model\EmailTemplate';
     public $crudId     = 'email_template';
 
-    public $listColumns = array( 'id', 'title', 'handle', 'created_on', 'updated_on');
+    public $listColumns = array( 'id', 'title', 'handle', 'comment', 'created_on', 'updated_on');
     // public $filterColumns = array();
-    // public $quicksearchFields = array('name');
+
+    public $quicksearchFields = array('title', 'content');
 
     public $canCreate = true;
     public $canUpdate = true;
@@ -26,10 +27,5 @@ class EmailTemplateCRUDHandler extends CRUDHandler
     // public $actionViewClass = 'AdminUI\\Action\\View\\StackView';
     // public $pageLimit = 15;
     // public $defaultOrder = array('id', 'DESC');
-
-    public function getCollection()
-    {
-        return parent::getCollection();
-    }
 }
 

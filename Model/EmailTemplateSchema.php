@@ -34,6 +34,12 @@ class EmailTemplateSchema extends SchemaDeclare
             ->renderAs('TextInput', array( 'size' => 12, 'placeholder' => '如: mainpage...' ) )
             ;
 
+        $this->column('comment')
+            ->text()
+            ->label('備註')
+            ->renderAs('TextareaInput')
+            ;
+
         $this->mixin('I18N\\Model\\Mixin\\I18NSchema');
         $this->mixin('CommonBundle\\Model\\Mixin\\MetaSchema');
     }
