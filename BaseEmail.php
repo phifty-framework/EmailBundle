@@ -80,6 +80,9 @@ abstract class BaseEmail extends Email
         }
 
         $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
+        if ( ! $mailTemplate ) {
+            throw new EmailException("Email template with handle '{$this->templateHandle}' not found.");
+        }
         $fsLoader = kernel()->twig->loader;   // framework 提供的 file system loader
 
         // a custom array loader with _email.html template
