@@ -13,7 +13,6 @@ class EmailException extends Exception { }
 
 abstract class BaseEmail extends Email
 {
-
     /**
      * @var boolean Should we use the email template from database ?
      */
@@ -24,15 +23,6 @@ abstract class BaseEmail extends Email
      *             template entry in database.
      */
     public $templateHandle;
-
-
-    /**
-     * @var string pre-defined email title
-     *
-     * A title is a part of a subject, that is, subject includes site name as its prefix 
-     * and append the title.
-     */
-    public $defaultTitle;
 
     /**
      * @var string default language, optional.
@@ -51,28 +41,33 @@ abstract class BaseEmail extends Email
         return null;
     }
 
-    public function getTitle() {
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
 
-        $titleTemplate = $this->defaultTitle;
-
-        if ( $this->useModelTemplate ) {    // from db
-            if ( ! $this->templateHandle ) {
-                throw new EmailException("Template handle is not defined.");
-            }
-            $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
-            if ( $mailTemplate && $mailTemplate->title ) {
-                $titleTemplate = $mailTemplate->title;
-            }
-        }
-        return $twig->render($titleTemplate, $this->getData());
-    }
-
-    public function getContent()
+    /**
+     *
+     */
+    public function renderSubject() 
     {
         if ( ! $this->useModelTemplate ) {    // from db
-            return parent::getContent();
+            return parent::renderSubject();
+        }
+
+        $loader = new Twig_Loader_String();
+        $twig = new Twig_Environment($loader);
+        $subjectTpl = kernel()->getApplicationName() . ' - ' . $this->title();
+        if ( ! $this->templateHandle ) {
+            throw new EmailException("Template handle is not defined.");
+        }
+        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
+        if ( $mailTemplate && $mailTemplate->title ) {
+            $subjectTpl = kernel()->getApplicationName() . ' - ' . $mailTemplate->title;
+        }
+        return $twig->render($subjectTpl, $this->getData());
+    }
+
+    public function renderContent()
+    {
+        if ( ! $this->useModelTemplate ) {    // from db
+            return parent::renderContent();
         }
 
         if ( ! $this->templateHandle ) {

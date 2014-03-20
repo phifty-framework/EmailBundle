@@ -1,6 +1,7 @@
 #!/usr/bin/env php
 <?php
 require 'main.php';
+use EmailBundle\Model\EmailTemplate;
 $bundleClasses = array('MemberBundle', 'UserBundle');
 foreach($bundleClasses as $bundleClass) {
     // email template 的路徑在 bundleName/Templates/email/
@@ -8,24 +9,27 @@ foreach($bundleClasses as $bundleClass) {
     $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
 
     foreach (new DirectoryIterator($folderPath) as $fileInfo) {
-        if($fileInfo->isDot())
+        if ($fileInfo->isDot()) {
             continue;
+        }
 
-        // 再根據 I18N 逐一載入
         if( ! $fileInfo->isDir()) {
             continue;
         }
 
+        // 再根據 I18N 逐一載入
         $lang = $fileInfo->getFilename();
         foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
-            if($subFileInfo->isDot()) continue;
+            if ($subFileInfo->isDot())
+                continue;
+
             $handle = $subFileInfo->getBasename('.html');
             $content = file_get_contents($subFileInfo->getPathname());
-            $record = new \EmailBundle\Model\EmailTemplate;
+            $record = new EmailTemplate;
             $ret = $record->loadOrCreate([
                 'content' => $content,
-                'handle' => $handle,
-                'lang' => $lang
+                'handle'  => $handle,
+                'lang'    => $lang
                 ], array('handle', 'lang'));
 
             echo implode('-', array($bundleClass, $lang, $handle, $ret->id ? "created" : "exists.")) . "\n";
