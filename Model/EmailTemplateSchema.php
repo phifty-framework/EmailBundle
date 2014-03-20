@@ -37,7 +37,10 @@ class EmailTemplateSchema extends SchemaDeclare
         $this->column('comment')
             ->text()
             ->label('備註')
-            ->renderAs('TextareaInput')
+            ->renderAs('TextareaInput', [ 
+                'rows' => 2,
+                'cols' => 72,
+            ])
             ;
 
         $this->mixin('I18N\\Model\\Mixin\\I18NSchema');

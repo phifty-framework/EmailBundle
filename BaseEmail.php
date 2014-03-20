@@ -33,6 +33,19 @@ abstract class BaseEmail extends Email
 
     public function __construct() {
         parent::__construct();
+
+        if ( $emailBundle = kernel()->bundle('EmailBundle') ) {
+            $a = $emailBundle->config('UseModelTemplate');
+            if ( $a !== null ) {
+                $this->useModelTemplate = $a;
+            }
+        }
+
+        // External Bundles can override the global config:
+        //
+        //   MemberBundle:
+        //     UseModelTemplate: true
+        //
         $this->bundle = $this->getBundleInstance();
         if ( $this->bundle ) {
             $this->useModelTemplate = $this->bundle->config('UseModelTemplate');

@@ -9,7 +9,9 @@ class EmailTemplateCRUDHandler extends CRUDHandler
     public $modelClass = 'EmailBundle\Model\EmailTemplate';
     public $crudId     = 'email_template';
 
-    public $listColumns = array( 'id', 'title', 'handle', 'comment', 'created_on', 'updated_on');
+    public $listColumns = array( 'id', 'title', 'handle');
+
+    public $listRightColumns = array('comment', 'updated_on', 'created_on');
     // public $filterColumns = array();
 
     public $quicksearchFields = array('title', 'content');

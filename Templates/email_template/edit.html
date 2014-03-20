@@ -20,25 +20,31 @@
     <div class="row">
         <div class="col-md-10">
 
+        <div class="col-field">
         {{ CRUD.Action.renderField('title',{ size: 35 })|raw }}
+        </div>
+
+        {% if Kernel.bundle('I18N') and bundle.config('with_lang') %}
+        <div class="col-field">
+            {{ CRUD.Action.renderField('lang')|raw }}
+        </div>
+        {% endif %}
+
+        <div class="col-field">
+        {{CRUD.Action.renderField('content_type')|raw}}
+        </div>
 
         <div class="col-field">
             {{ CRUD.Action.renderField('handle',{ size: 24 })|raw }}
         </div>
 
-        {% if Kernel.bundle('I18N') and bundle.config('with_lang') %}
-            <div class="col-field">
-                {{ CRUD.Action.renderField('lang')|raw }}
-            </div>
-        {% endif %}
-
-        <div class="clear"> </div>
-
-        {{CRUD.Action.renderField('content_type')|raw}}
+        <div class="clearfix"> </div>
 
         <div id="aceEditor{{frag_serial}}">{{ CRUD.Record.content |raw }}</div>
 
-        {{ CRUD.Action.renderField('content',null, { id: 'textarea' ~ frag_serial, style: 'display: none;' })|raw}}
+        <div class="hide">
+        {{ CRUD.Action.renderField('content',null, { id: 'textarea' ~ frag_serial })|raw}}
+        </div>
 
         {{ CRUD.Action.renderField('comment') |raw}}
 
