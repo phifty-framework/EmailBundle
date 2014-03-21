@@ -2,10 +2,16 @@
 <?php
 require 'main.php';
 use EmailBundle\Model\EmailTemplate;
-$bundleClasses = array('MemberBundle', 'UserBundle');
+$bundleClasses = array('MemberBundle', 'UserBundle', 'CartBundle');
 foreach($bundleClasses as $bundleClass) {
     // email template 的路徑在 bundleName/Templates/email/
     $bundle = kernel()->bundle( $bundleClass );
+
+    if ( ! $bundle ) {
+        continue;
+    }
+
+
     $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
 
     foreach (new DirectoryIterator($folderPath) as $fileInfo) {
@@ -35,10 +41,10 @@ foreach($bundleClasses as $bundleClass) {
             if ( preg_match('/^{#\s+(.*?)\s*#}/is', $content, $matches) ) {
                 $annotations = $matches[1];
                 if ( preg_match('/title:\s*"(.*?)"/is', $annotations, $matches) ) {
-                    $title = $matches[1];
+                    $title = trim($matches[1]);
                 }
                 if ( preg_match('/comment:\s*"(.*?)"/is', $annotations, $matches) ) {
-                    $comment = $matches[1];
+                    $comment = trim($matches[1]);
                 }
             }
 

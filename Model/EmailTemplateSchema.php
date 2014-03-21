@@ -30,7 +30,7 @@ class EmailTemplateSchema extends SchemaDeclare
 
         $this->column('handle')
             ->varchar(256)
-            ->label('操作符')
+            ->label('程式標記')
             ->renderAs('TextInput', array( 'size' => 12, 'placeholder' => '如: mainpage...' ) )
             ;
 
