@@ -9,7 +9,11 @@ class EmailBundle extends Bundle
     }
 
     public function defaultConfig() {
-        return array();
+        return array(
+            'ThemeBackground' => "#d0d0d0",
+            'ThemeForeground'  => "#666",
+            'ContentTextColor' => "#666",
+        );
     }
 
     public function init() 
