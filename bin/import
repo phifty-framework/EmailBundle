@@ -2,7 +2,7 @@
 <?php
 require 'main.php';
 use EmailBundle\Model\EmailTemplate;
-$bundleClasses = array('MemberBundle', 'UserBundle', 'CartBundle');
+$bundleClasses = array('MemberBundle', 'UserBundle', 'CartBundle', 'ContactUs');
 foreach($bundleClasses as $bundleClass) {
     // email template 的路徑在 bundleName/Templates/email/
     $bundle = kernel()->bundle( $bundleClass );
@@ -11,6 +11,8 @@ foreach($bundleClasses as $bundleClass) {
         continue;
     }
 
+
+    echo "===> Import emails from " , get_class($bundle), " ...\n";
 
     $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
 
@@ -23,8 +25,11 @@ foreach($bundleClasses as $bundleClass) {
             continue;
         }
 
+
         // 再根據 I18N 逐一載入
         $lang = $fileInfo->getFilename();
+        echo "  Language $lang:\n";
+
         foreach (new DirectoryIterator($fileInfo->getPathname()) as $subFileInfo) {
             if ($subFileInfo->isDot()) {
                 continue;
@@ -55,13 +60,11 @@ foreach($bundleClasses as $bundleClass) {
                 'content' => $content,
                 'handle'  => $handle,
                 'comment' => $comment,
-                'lang'    => $lang
+                'lang'    => $lang,
                 ], array('handle', 'lang'));
 
-            printf("Importing %s: % -20s - %s\n",
-                $bundleClass,
-                $title ? "$title ($handle)" : $handle,
-                $lang
+            printf("    - %s\n",
+                $title ? "$title ($handle)" : $handle
             );
         }
     }
