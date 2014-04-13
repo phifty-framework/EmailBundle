@@ -33,7 +33,10 @@ class EmailTemplateCRUDHandler extends CRUDHandler
     public function init() {
         parent::init();
         $this->setFormatter('title', function($record) {
-            return mb_substr($record->title,0, 12) . '..';
+            if ( mb_strlen($record->title) > 12 ) {
+                return mb_substr($record->title,0, 12) . '..';
+            }
+            return $record->title;
         });
     }
 }
