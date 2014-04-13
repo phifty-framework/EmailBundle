@@ -48,7 +48,10 @@ abstract class BaseEmail extends Email
         //
         $this->bundle = $this->getBundleInstance();
         if ( $this->bundle ) {
-            $this->useModelTemplate = $this->bundle->config('UseModelTemplate');
+            $a = $this->bundle->config('UseModelTemplate');
+            if ( $a !== null ) {
+                $this->useModelTemplate = $a;
+            }
         }
     }
 
@@ -64,8 +67,7 @@ abstract class BaseEmail extends Email
     }
 
     public static function loadTemplateRecord($handle, $lang = null) {
-        $lang = $this->getLang();
-        $record = new EmailTemplate(array( 
+        $record = new EmailTemplate(array(
             'handle' => $handle,
             'lang' => $lang, 
         ));
@@ -95,11 +97,11 @@ abstract class BaseEmail extends Email
         if ( ! $this->templateHandle ) {
             throw new EmailException("Template handle is not defined.");
         }
-        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
+        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->getLang() );
         if ( $mailTemplate && $mailTemplate->title ) {
             $subjectTpl = kernel()->getApplicationName() . ' - ' . $mailTemplate->title;
         }
-        return $twig->render($subjectTpl, $this->getData());
+        return $twig->render($subjectTpl, $this->getArguments());
     }
 
     public function renderContent()
@@ -112,7 +114,7 @@ abstract class BaseEmail extends Email
             throw new EmailException("Template handle is empty.");
         }
 
-        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->lang);
+        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->getLang() );
         if ( ! $mailTemplate ) {
             throw new EmailException("Email template with handle '{$this->templateHandle}' not found.");
         }
@@ -129,7 +131,7 @@ abstract class BaseEmail extends Email
 
         // create another twig environment for this chained loader.
         $twig = new Twig_Environment($chainLoader);
-        return $twig->render('_email.html',  $this->getData());
+        return $twig->render('_email.html',  $this->getArguments());
     }
 
     public function template() {
