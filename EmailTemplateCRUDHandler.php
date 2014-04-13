@@ -29,5 +29,12 @@ class EmailTemplateCRUDHandler extends CRUDHandler
     // public $actionViewClass = 'AdminUI\\Action\\View\\StackView';
     // public $pageLimit = 15;
     // public $defaultOrder = array('id', 'DESC');
+
+    public function init() {
+        parent::init();
+        $this->setFormatter('title', function($record) {
+            return mb_substr($record->title,0, 12) . '..';
+        });
+    }
 }
 
