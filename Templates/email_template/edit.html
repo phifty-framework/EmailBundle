@@ -40,7 +40,7 @@
 
         <div class="clearfix"> </div>
 
-        <div id="aceEditor{{frag_serial}}">{{ CRUD.Record.content |raw }}</div>
+        <div id="aceEditor{{frag_serial}}">{{CRUD.Record.content}}</div>
 
         <div class="hide">
         {{ CRUD.Action.renderField('content',null, { id: 'textarea' ~ frag_serial })|raw}}

@@ -48,7 +48,10 @@ abstract class BaseEmail extends Email
         //
         $this->bundle = $this->getBundleInstance();
         if ( $this->bundle ) {
-            $this->useModelTemplate = $this->bundle->config('UseModelTemplate');
+            $a = $this->bundle->config('UseModelTemplate');
+            if ( $a !== null ) {
+                $this->useModelTemplate = $a;
+            }
         }
     }
 
