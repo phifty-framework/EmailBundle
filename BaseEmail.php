@@ -154,6 +154,19 @@ abstract class BaseEmail extends Email
         $topNs = $args[0]; // top level namespace
         return join('/',array('@' . $topNs, 'email', $this->getLang(), $this->templateHandle . '.html') );
     }
+
+    public function send() {
+        $envLang = kernel()->locale->current();
+        $lang = $this->getLang();
+        if ( $lang ) {
+            putenv('LC_ALL=' . $lang);
+            setlocale(LC_ALL,  $lang . '.UTF-8' );
+        }
+        $ret = parent::send();
+        putenv('LC_ALL=' . $envLang );
+        setlocale(LC_ALL,  $envLang . '.UTF-8' );
+        return $ret;
+    }
 }
 
 
