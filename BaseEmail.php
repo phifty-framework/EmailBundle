@@ -93,6 +93,7 @@ abstract class BaseEmail extends Email
 
         $loader = new Twig_Loader_String();
         $twig = new Twig_Environment($loader);
+
         $subjectTpl = kernel()->getApplicationName() . ' - ' . $this->title();
         if ( ! $this->templateHandle ) {
             throw new EmailException("Template handle is not defined.");
@@ -131,6 +132,16 @@ abstract class BaseEmail extends Email
 
         // create another twig environment for this chained loader.
         $twig = new Twig_Environment($chainLoader);
+
+        $twig->addExtension(new \Twig_Extension_Core );
+        $twig->addExtension(new \Twig_Extensions_Extension_Text );
+        $twig->addExtension(new \Twig_Extensions_Extension_I18n );
+
+        // load markdown twig extension
+        if (class_exists('Twig_Extension_Markdown', true)) {
+            $twig->addExtension(new \Twig_Extension_Markdown );
+        }
+
         return $twig->render('_email.html',  $this->getArguments());
     }
 
