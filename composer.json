@@ -6,6 +6,7 @@
             "email": "yoanlin93@gmail.com"
         }
     ],
+    "bin": [ "bin/import-email-templates" ],
     "require": {},
     "autoload": { "psr-4":  { "EmailBundle\\": "" } }
 }
