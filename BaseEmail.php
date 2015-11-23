@@ -1,5 +1,7 @@
 <?php
+
 namespace EmailBundle;
+
 use Phifty\Message\Email;
 use EmailBundle\Model\EmailTemplate;
 use Exception;
@@ -10,17 +12,19 @@ use Twig_Environment;
 use Twig_Extensions_Extension_Text;
 use Twig_Extensions_Extension_I18n;
 
-class EmailException extends Exception { }
+class EmailException extends Exception
+{
+}
 
 abstract class BaseEmail extends Email
 {
     /**
-     * @var boolean Should we use the email template from database ?
+     * @var bool Should we use the email template from database ?
      */
     public $useModelTemplate = false;  // 預設是關閉的
 
     /**
-     * @var string $templateHandle is used for finding template files or a email 
+     * @var string is used for finding template files or a email 
      *             template entry in database.
      */
     public $templateHandle;
@@ -32,12 +36,13 @@ abstract class BaseEmail extends Email
 
     public $bundle;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
-        if ( $emailBundle = kernel()->bundle('EmailBundle') ) {
+        if ($emailBundle = kernel()->bundle('EmailBundle')) {
             $a = $emailBundle->config('UseModelTemplate');
-            if ( $a !== null ) {
+            if ($a !== null) {
                 $this->useModelTemplate = $a;
             }
         }
@@ -48,77 +53,80 @@ abstract class BaseEmail extends Email
         //     UseModelTemplate: true
         //
         $this->bundle = $this->getBundleInstance();
-        if ( $this->bundle ) {
+        if ($this->bundle) {
             $a = $this->bundle->config('UseModelTemplate');
-            if ( $a !== null ) {
+            if ($a !== null) {
                 $this->useModelTemplate = $a;
             }
         }
     }
 
-
     // find bundle object
-    public function getBundleInstance() {
+    public function getBundleInstance()
+    {
         $ro = new ReflectionObject($this);
-        $args = explode('\\',$ro->getNamespaceName());
-        if ( count($args) > 0 ) {
+        $args = explode('\\', $ro->getNamespaceName());
+        if (count($args) > 0) {
             $ns = $args[0];
+
             return kernel()->bundle($ns);
         }
     }
 
-    public static function loadTemplateRecord($handle, $lang) {
-        $record = new EmailTemplate(array( 
+    public static function loadTemplateRecord($handle, $lang)
+    {
+        $record = new EmailTemplate(array(
             'handle' => $handle,
-            'lang' => $lang, 
+            'lang' => $lang,
         ));
-        if ( $record->id ) {
+        if ($record->id) {
             return $record;
         }
-        return null;
+
+        return;
     }
 
-    public function getLang() {
+    public function getLang()
+    {
         return $this->lang ?: kernel()->locale->current();
     }
-
 
     /**
      *
      */
-    public function renderSubject() 
+    public function renderSubject()
     {
-        if ( ! $this->useModelTemplate ) {    // from db
+        if (!$this->useModelTemplate) {    // from db
             return parent::renderSubject();
         }
 
-
-        $subjectTpl = kernel()->getApplicationName() . ' - ' . $this->title();
-        if ( ! $this->templateHandle ) {
-            throw new EmailException("Template handle is not defined.");
+        $subjectTpl = kernel()->getApplicationName().' - '.$this->title();
+        if (!$this->templateHandle) {
+            throw new EmailException('Template handle is not defined.');
         }
-        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->getLang() );
-        if ( $mailTemplate && $mailTemplate->title ) {
-            $subjectTpl = kernel()->getApplicationName() . ' - ' . $mailTemplate->title;
+        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->getLang());
+        if ($mailTemplate && $mailTemplate->title) {
+            $subjectTpl = kernel()->getApplicationName().' - '.$mailTemplate->title;
         }
 
         $loader = new Twig_Loader_Array(['subject.tpl' => $subjectTpl]);
         $twig = new Twig_Environment($loader);
+
         return $twig->render('subject.tpl', $this->getArguments());
     }
 
     public function renderContent()
     {
-        if ( ! $this->useModelTemplate ) {    // from file system
+        if (!$this->useModelTemplate) {    // from file system
             return parent::renderContent();
         }
 
-        if ( ! $this->templateHandle ) {
-            throw new EmailException("Template handle is empty.");
+        if (!$this->templateHandle) {
+            throw new EmailException('Template handle is empty.');
         }
 
-        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->getLang() );
-        if ( ! $mailTemplate ) {
+        $mailTemplate = self::loadTemplateRecord($this->templateHandle, $this->getLang());
+        if (!$mailTemplate) {
             throw new EmailException("Email template with handle '{$this->templateHandle}' not found.");
         }
         $fsLoader = kernel()->twig->loader;   // framework 提供的 file system loader
@@ -134,12 +142,12 @@ abstract class BaseEmail extends Email
 
         // create another twig environment for this chained loader.
         $twig = new Twig_Environment($chainLoader);
-        $twig->addExtension(new Twig_Extensions_Extension_Text );
-        $twig->addExtension(new Twig_Extensions_Extension_I18n );
+        $twig->addExtension(new Twig_Extensions_Extension_Text());
+        $twig->addExtension(new Twig_Extensions_Extension_I18n());
 
         // load markdown twig extension
         if (class_exists('Twig_Extension_Markdown', true)) {
-            $twig->addExtension(new \Twig_Extension_Markdown );
+            $twig->addExtension(new \Twig_Extension_Markdown());
         }
 
         return $twig->render('_email.html',  $this->getArguments());
@@ -151,34 +159,35 @@ abstract class BaseEmail extends Email
     }
 
     /**
-     * This method returns a template file path in this format:
+     * This method returns a template file path in this format:.
      *
      * @return string template file path for twig
      *
      *      @{bundleName}/email/{lang}/{templateHandle}.html
      */
-    public function getTemplateSubPath() {
+    public function getTemplateSubPath()
+    {
         $ro = new ReflectionObject($this);
-        $args = explode('\\',$ro->getNamespaceName());
-        if ( empty($args) || ! isset($args[0]) ) {
-            throw new EmailException("Wrong Namespace For Email template path.");
+        $args = explode('\\', $ro->getNamespaceName());
+        if (empty($args) || !isset($args[0])) {
+            throw new EmailException('Wrong Namespace For Email template path.');
         }
         $topNs = $args[0]; // top level namespace
-        return join('/',array('@' . $topNs, 'email', $this->getLang(), $this->templateHandle . '.html') );
+        return implode('/', array('@'.$topNs, 'email', $this->getLang(), $this->templateHandle.'.html'));
     }
 
-    public function send() {
+    public function send()
+    {
         $envLang = kernel()->locale->current();
         $lang = $this->getLang();
-        if ( $lang ) {
-            putenv('LC_ALL=' . $lang);
-            setlocale(LC_ALL,  $lang . '.UTF-8' );
+        if ($lang) {
+            putenv('LC_ALL='.$lang);
+            setlocale(LC_ALL,  $lang.'.UTF-8');
         }
         $ret = parent::send();
-        putenv('LC_ALL=' . $envLang );
-        setlocale(LC_ALL,  $envLang . '.UTF-8' );
+        putenv('LC_ALL='.$envLang);
+        setlocale(LC_ALL,  $envLang.'.UTF-8');
+
         return $ret;
     }
 }
-
-
