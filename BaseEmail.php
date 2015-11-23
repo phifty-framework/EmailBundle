@@ -7,7 +7,8 @@ use ReflectionObject;
 use Twig_Loader_Array;
 use Twig_Loader_Chain;
 use Twig_Environment;
-use Twig_Loader_String;
+use Twig_Extensions_Extension_Text;
+use Twig_Extensions_Extension_I18n;
 
 class EmailException extends Exception { }
 
@@ -91,8 +92,6 @@ abstract class BaseEmail extends Email
             return parent::renderSubject();
         }
 
-        $loader = new Twig_Loader_String();
-        $twig = new Twig_Environment($loader);
 
         $subjectTpl = kernel()->getApplicationName() . ' - ' . $this->title();
         if ( ! $this->templateHandle ) {
@@ -102,7 +101,10 @@ abstract class BaseEmail extends Email
         if ( $mailTemplate && $mailTemplate->title ) {
             $subjectTpl = kernel()->getApplicationName() . ' - ' . $mailTemplate->title;
         }
-        return $twig->render($subjectTpl, $this->getArguments());
+
+        $loader = new Twig_Loader_Array(['subject.tpl' => $subjectTpl]);
+        $twig = new Twig_Environment($loader);
+        return $twig->render('subject.tpl', $this->getArguments());
     }
 
     public function renderContent()
@@ -126,16 +128,14 @@ abstract class BaseEmail extends Email
         $arrayLoader = new Twig_Loader_Array(array(
             '_email.html' => $mailTemplate->content,
         ));
-        
+
         // lookup template from the array loader first, then the file system loader.
         $chainLoader = new Twig_Loader_Chain(array($arrayLoader, $fsLoader));
 
         // create another twig environment for this chained loader.
         $twig = new Twig_Environment($chainLoader);
-
-        $twig->addExtension(new \Twig_Extension_Core );
-        $twig->addExtension(new \Twig_Extensions_Extension_Text );
-        $twig->addExtension(new \Twig_Extensions_Extension_I18n );
+        $twig->addExtension(new Twig_Extensions_Extension_Text );
+        $twig->addExtension(new Twig_Extensions_Extension_I18n );
 
         // load markdown twig extension
         if (class_exists('Twig_Extension_Markdown', true)) {
@@ -145,7 +145,8 @@ abstract class BaseEmail extends Email
         return $twig->render('_email.html',  $this->getArguments());
     }
 
-    public function template() {
+    public function template()
+    {
         return $this->getTemplateSubPath();
     }
 

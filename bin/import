@@ -1,27 +1,31 @@
 #!/usr/bin/env php
 <?php
-require 'main.php';
+require 'bootstrap.php';
 use EmailBundle\Model\EmailTemplate;
+use CLIFramework\Logger;
+
+$logger = new Logger;
 $bundleClasses = array('MemberBundle', 'UserBundle', 'CartBundle', 'ContactUs');
 foreach($bundleClasses as $bundleClass) {
     // email template 的路徑在 bundleName/Templates/email/
-    $bundle = kernel()->bundle( $bundleClass );
+    $bundle = kernel()->bundle($bundleClass);
 
-    if ( ! $bundle ) {
+    if (! $bundle) {
         continue;
     }
 
 
-    echo "===> Import emails from " , get_class($bundle), " ...\n";
 
     $folderPath = $bundle->locate() . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR . 'email' . DIRECTORY_SEPARATOR;
+
+    $logger->info("===> Import emails from " . get_class($bundle) . " @ " . $folderPath);
 
     foreach (new DirectoryIterator($folderPath) as $fileInfo) {
         if ($fileInfo->isDot()) {
             continue;
         }
 
-        if( ! $fileInfo->isDir()) {
+        if (! $fileInfo->isDir()) {
             continue;
         }
 
@@ -55,13 +59,18 @@ foreach($bundleClasses as $bundleClass) {
 
 
             $record = new EmailTemplate;
-            $record->createOrUpdate([
+            $ret = $record->createOrUpdate([
                 'title'   => $title,
                 'content' => $content,
                 'handle'  => $handle,
                 'comment' => $comment,
                 'lang'    => $lang,
                 ], array('handle', 'lang'));
+
+            if ($ret->error) {
+                print_r($ret);
+                die($ret->message);
+            }
 
             printf("    - %s\n",
                 $title ? "$title ($handle)" : $handle

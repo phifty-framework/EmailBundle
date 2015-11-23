@@ -16,12 +16,12 @@ class EmailBundle extends Bundle
         );
     }
 
-    public function init() 
+    public function init()
     {
-        $this->expandRoute('/bs/email_template', 'EmailTemplateCRUDHandler');
-        if ( $this->config('Management') ) {
-            kernel()->event->register( 'adminui.init_menu' , function($menu) {
-                $menu->createCrudMenuItem( 'email_template', _('Email 管理') );
+        $this->mount('/bs/email_template', 'EmailTemplateCRUDHandler');
+        if ($this->config('Management')) {
+            $this->kernel->event->register( 'adminui.init_menu' , function($menu) {
+                // $menu->createCrudMenuItem( 'email_template', _('Email 管理') );
             });
         }
     }
