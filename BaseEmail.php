@@ -16,6 +16,29 @@ class EmailException extends Exception
 {
 }
 
+
+/**
+ * A BaseEmail class composite the Swift_Message class and extends from Phifty\Email
+ *
+ * It can read templates from database or use the template from file system.
+ *
+ * A simple use case could be something like this:
+ *
+ *
+ * @code
+ * $email = new UserEmail;
+ *
+ *
+ * // you can set the arguments manually
+ * $email->setArguments([ ... ]);
+ *
+ * // or through the array access interface
+ * $email['username'] = 'John ';
+ * $email['phone'] = '123456';
+ * $email->send();
+ *
+ * @code
+ */
 abstract class BaseEmail extends Email
 {
     /**
