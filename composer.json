@@ -1,5 +1,10 @@
 {
     "name": "corneltek/emailbundle",
+    "type": "phifty-bundle",
+    "require": {
+        "swiftmailer/swiftmailer": "^5.4",
+        "corneltek/installers": "dev-master"
+    },
     "authors": [
         {
             "name": "c9s",
@@ -7,6 +12,5 @@
         }
     ],
     "bin": [ "bin/import-email-templates" ],
-    "require": {},
     "autoload": { "psr-4":  { "EmailBundle\\": "" } }
 }
