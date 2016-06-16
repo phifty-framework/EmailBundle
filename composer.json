@@ -1,9 +1,9 @@
 {
-    "name": "corneltek/emailbundle",
+    "name": "phifty/emailbundle",
     "type": "phifty-bundle",
     "require": {
         "swiftmailer/swiftmailer": "^5.4",
-        "corneltek/installers": "dev-master"
+        "composer/installers": "~1.0.0"
     },
     "authors": [
         {
