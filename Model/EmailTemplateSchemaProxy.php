@@ -2,7 +2,7 @@
 namespace EmailBundle\Model;
 use LazyRecord\Schema\RuntimeSchema;
 use LazyRecord\Schema\RuntimeColumn;
-use LazyRecord\Schema\Relationship;
+use LazyRecord\Schema\Relationship\Relationship;
 class EmailTemplateSchemaProxy
     extends RuntimeSchema
 {
@@ -65,7 +65,7 @@ class EmailTemplateSchemaProxy
     public function __construct()
     {
         $this->relations = array( 
-      'created_by' => \LazyRecord\Schema\Relationship::__set_state(array( 
+      'created_by' => \LazyRecord\Schema\Relationship\BelongsTo::__set_state(array( 
       'data' => array( 
           'type' => 3,
           'self_schema' => 'EmailBundle\\Model\\EmailTemplateSchema',
@@ -79,8 +79,9 @@ class EmailTemplateSchemaProxy
         ),
       'onUpdate' => NULL,
       'onDelete' => NULL,
+      'usingIndex' => false,
     )),
-      'updated_by' => \LazyRecord\Schema\Relationship::__set_state(array( 
+      'updated_by' => \LazyRecord\Schema\Relationship\BelongsTo::__set_state(array( 
       'data' => array( 
           'type' => 3,
           'self_schema' => 'EmailBundle\\Model\\EmailTemplateSchema',
@@ -94,6 +95,7 @@ class EmailTemplateSchemaProxy
         ),
       'onUpdate' => NULL,
       'onDelete' => NULL,
+      'usingIndex' => false,
     )),
     );
         $this->columns[ 'id' ] = new RuntimeColumn('id',array( 
@@ -358,7 +360,8 @@ class EmailTemplateSchemaProxy
         $this->columns[ 'created_by' ] = new RuntimeColumn('created_by',array( 
       'locales' => NULL,
       'attributes' => array( 
-          'refer' => 'UserBundle\\Model\\User',
+          'refer' => 'UserBundle\\Model\\UserSchema',
+          'length' => NULL,
           'default' => function() {
                     if (isset($_SESSION)) {
                         return kernel()->currentUser->id;
@@ -378,7 +381,8 @@ class EmailTemplateSchemaProxy
       'enum' => NULL,
       'set' => NULL,
       'onUpdate' => NULL,
-      'refer' => 'UserBundle\\Model\\User',
+      'refer' => 'UserBundle\\Model\\UserSchema',
+      'length' => NULL,
       'default' => function() {
                     if (isset($_SESSION)) {
                         return kernel()->currentUser->id;
@@ -392,7 +396,8 @@ class EmailTemplateSchemaProxy
         $this->columns[ 'updated_by' ] = new RuntimeColumn('updated_by',array( 
       'locales' => NULL,
       'attributes' => array( 
-          'refer' => 'UserBundle\\Model\\User',
+          'refer' => 'UserBundle\\Model\\UserSchema',
+          'length' => NULL,
           'default' => function() {
                     if ( isset($_SESSION) ) {
                         return kernel()->currentUser->id;
@@ -412,7 +417,8 @@ class EmailTemplateSchemaProxy
       'enum' => NULL,
       'set' => NULL,
       'onUpdate' => NULL,
-      'refer' => 'UserBundle\\Model\\User',
+      'refer' => 'UserBundle\\Model\\UserSchema',
+      'length' => NULL,
       'default' => function() {
                     if ( isset($_SESSION) ) {
                         return kernel()->currentUser->id;
