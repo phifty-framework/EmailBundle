@@ -13,5 +13,5 @@
     ],
     "bin": [ "bin/import-email-templates" ],
     "autoload": { "psr-4":  { "EmailBundle\\": "" } },
-    "extra": { "branch-alias": { "dev-master": "3.1.x-dev" } }
+    "extra": { "branch-alias": { "dev-master": "4.0.x-dev" } }
 }
