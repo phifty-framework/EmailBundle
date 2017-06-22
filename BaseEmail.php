@@ -98,11 +98,12 @@ abstract class BaseEmail extends Email
 
     public static function loadTemplateRecord($handle, $lang)
     {
-        $record = new EmailTemplate(array(
+        $record = EmailTemplate::load([
             'handle' => $handle,
             'lang' => $lang,
-        ));
-        if ($record->id) {
+        ]);
+
+        if ($record) {
             return $record;
         }
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
+
 require 'bootstrap.php';
+
 use EmailBundle\Model\EmailTemplate;
 use CLIFramework\Logger;
 
@@ -57,9 +59,7 @@ foreach($bundleClasses as $bundleClass) {
                 }
             }
 
-
-            $record = new EmailTemplate;
-            $ret = $record->createOrUpdate([
+            $ret = EmailTemplate::updateOrCreate([
                 'title'   => $title,
                 'content' => $content,
                 'handle'  => $handle,
