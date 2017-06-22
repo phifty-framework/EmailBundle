@@ -3,7 +3,27 @@
     "type": "phifty-bundle",
     "require": {
         "swiftmailer/swiftmailer": "^5.4",
-        "composer/installers": "dev-master"
+        "composer/installers": "^1",
+        "phifty/phifty": "4.0.x-dev",
+        "phifty/userbundle": "4.0.x-dev"
+    },
+    "require-dev": {
+        "corneltek/cliframework": "@dev",
+        "c9s/webaction": "@dev",
+        "corneltek/assetkit": "@dev",
+        "corneltek/codegen": "@dev",
+        "corneltek/kendo": "@dev",
+        "corneltek/pux": "@dev",
+        "phpsgi/phpsgi": "@dev",
+        "phpsgi/funk": "@dev",
+        "corneltek/webui": "@dev",
+        "universal/universal": "@dev",
+        "maghead/maghead": "@dev",
+        "maghead/magsql": "@dev",
+        "phifty/corebundle": "4.0.x-dev",
+        "phifty/commonbundle": "4.0.x-dev",
+        "phifty/adminui": "4.0.x-dev",
+        "phifty/userbundle": "4.0.x-dev"
     },
     "authors": [
         {
