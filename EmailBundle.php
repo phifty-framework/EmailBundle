@@ -26,7 +26,8 @@ class EmailBundle extends Bundle
         }
     }
 
-    public function getSystemMail() {
+    public function getSystemMail()
+    {
         $mailConfig = kernel()->config->get('framework','Mail');
         if ( isset($mailConfig['System']) ) {
             $mail = $mailConfig['System'];

@@ -12,9 +12,10 @@
 </style>
 <div class="action-result-container"> </div>
 <form id="form{{frag_serial}}" class="ajax-action" enctype="multipart/form-data" method="POST">
-        {% if Record.hasKey %}
-          {{RecordAction.renderKeyWidget|raw}}
-        {% endif %}
+
+    {% if Record.hasKey %}
+      {{RecordAction.renderKeyWidget|raw}}
+    {% endif %}
 
     {{ RecordAction.renderSignatureWidget|raw }}
     {{ RecordAction.renderCSRFTokenWidget|raw }}

@@ -2,11 +2,12 @@
 namespace EmailBundle;
 use Phifty\Bundle;
 use AdminUI\CRUDHandler;
+use EmailBundle\Model\EmailTemplate;
 
 class EmailTemplateCRUDHandler extends CRUDHandler
 {
-    /* CRUD Attributes */
-    public $modelClass = 'EmailBundle\Model\EmailTemplate';
+    public $modelClass = EmailTemplate::class;
+
     public $crudId     = 'email_template';
 
     public $listColumns = array( 'id', 'title', 'handle');
@@ -29,15 +30,5 @@ class EmailTemplateCRUDHandler extends CRUDHandler
     // public $actionViewClass = 'AdminUI\\Action\\View\\StackView';
     // public $pageLimit = 15;
     // public $defaultOrder = array('id', 'DESC');
-
-    public function init() {
-        parent::init();
-        $this->setFormatter('title', function($record) {
-            if ( mb_strlen($record->title) > 12 ) {
-                return mb_substr($record->title,0, 12) . '..';
-            }
-            return $record->title;
-        });
-    }
 }
 
