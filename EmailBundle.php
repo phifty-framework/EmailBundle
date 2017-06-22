@@ -16,7 +16,7 @@ class EmailBundle extends Bundle
         );
     }
 
-    public function init()
+    public function boot()
     {
         $this->mount('/bs/email_template', 'EmailTemplateCRUDHandler');
         if ($this->config('Management')) {

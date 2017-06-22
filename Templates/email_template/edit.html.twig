@@ -1,4 +1,4 @@
-{% extends '@CRUD/edit.html' %}
+{% extends '@CRUD/edit.html.twig' %}
 {% block section_body %}
 {% set bundle = Kernel.bundle('EmailBundle') %}
 <style type="text/css">
@@ -10,51 +10,52 @@
     margin-bottom: 20px;
 }
 </style>
+<div class="action-result-container"> </div>
 <form id="form{{frag_serial}}" class="ajax-action" enctype="multipart/form-data" method="POST">
-    {% if CRUD.Record.id %}
-        {{ forms.hidden('id', CRUD.Record.id) }}
-    {% endif %}
+        {% if Record.hasKey %}
+          {{RecordAction.renderKeyWidget|raw}}
+        {% endif %}
 
-    {{ CRUD.Action.renderSignatureWidget|raw }}
-    {{ CRUD.Action.renderCSRFTokenWidget|raw }}
+    {{ RecordAction.renderSignatureWidget|raw }}
+    {{ RecordAction.renderCSRFTokenWidget|raw }}
 
     <div class="row">
         <div class="col-md-10">
 
         <div class="col-field">
-        {{ CRUD.Action.renderField('title',{ size: 35 })|raw }}
+        {{ RecordAction.renderField('title',{ size: 35 })|raw }}
         </div>
 
         {% if Kernel.bundle('I18N') and bundle.config('with_lang') %}
         <div class="col-field">
-            {{ CRUD.Action.renderField('lang')|raw }}
+            {{ RecordAction.renderField('lang')|raw }}
         </div>
         {% endif %}
 
         <div class="col-field">
-        {{CRUD.Action.renderField('content_type')|raw}}
+        {{RecordAction.renderField('content_type')|raw}}
         </div>
 
         <div class="col-field">
-            {{ CRUD.Action.renderField('handle',{ size: 24 })|raw }}
+            {{ RecordAction.renderField('handle',{ size: 24 })|raw }}
         </div>
 
         <div class="clearfix"> </div>
 
-        <div id="aceEditor{{frag_serial}}">{{CRUD.Record.content}}</div>
+        <div id="aceEditor{{frag_serial}}">{{Record.content}}</div>
 
         <div class="hide">
-        {{ CRUD.Action.renderField('content',null, { id: 'textarea' ~ frag_serial })|raw}}
+        {{ RecordAction.renderField('content',null, { id: 'textarea' ~ frag_serial })|raw}}
         </div>
 
-        {{ CRUD.Action.renderField('comment') |raw}}
+        {{ RecordAction.renderField('comment') |raw}}
 
         <div class="clear"> </div>
 
         <div class="collapsible collapse-section">
             <h3>其他資訊</h3>
             <div>
-                {% include '@CRUD/metadata.html' %}
+                {% include '@CRUD/metadata.html.twig' %}
             </div>
         </div>
     </div>
