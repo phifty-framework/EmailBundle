@@ -5,7 +5,8 @@
         "swiftmailer/swiftmailer": "^5.4",
         "composer/installers": "^1",
         "phifty/phifty": "4.0.x-dev",
-        "phifty/userbundle": "4.0.x-dev"
+        "phifty/userbundle": "4.0.x-dev",
+        "corneltek/twig-markdown": "2.0.x-dev"
     },
     "require-dev": {
         "corneltek/cliframework": "@dev",
@@ -20,11 +21,11 @@
         "universal/universal": "@dev",
         "maghead/maghead": "@dev",
         "maghead/magsql": "@dev",
+        "corneltek/twig-markdown": "@dev",
         "phifty/corebundle": "4.0.x-dev",
         "phifty/commonbundle": "4.0.x-dev",
         "phifty/adminui": "4.0.x-dev",
-        "phifty/userbundle": "4.0.x-dev",
-        "corneltek/twig-markdown": "2.0.x-dev"
+        "phifty/userbundle": "4.0.x-dev"
     },
     "authors": [
         {
