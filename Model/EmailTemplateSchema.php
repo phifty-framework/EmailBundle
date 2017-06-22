@@ -1,8 +1,8 @@
 <?php
 namespace EmailBundle\Model;
-use LazyRecord\Schema\SchemaDeclare;
+use Maghead\Schema\DeclareSchema;
 
-class EmailTemplateSchema extends SchemaDeclare
+class EmailTemplateSchema extends DeclareSchema
 {
     function schema() {
       $this->column('title')

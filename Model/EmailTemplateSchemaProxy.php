@@ -1,19 +1,42 @@
 <?php
+
 namespace EmailBundle\Model;
-use LazyRecord\Schema\RuntimeSchema;
-use LazyRecord\Schema\RuntimeColumn;
-use LazyRecord\Schema\Relationship\Relationship;
+
+
+use Maghead\Schema\RuntimeSchema;
+use Maghead\Schema\RuntimeColumn;
+use Maghead\Schema\Relationship\Relationship;
+use Maghead\Schema\Relationship\HasOne;
+use Maghead\Schema\Relationship\HasMany;
+use Maghead\Schema\Relationship\BelongsTo;
+use Maghead\Schema\Relationship\ManyToMany;
+
 class EmailTemplateSchemaProxy
     extends RuntimeSchema
 {
-    const schema_class = 'EmailBundle\\Model\\EmailTemplateSchema';
-    const model_name = 'EmailTemplate';
-    const model_namespace = 'EmailBundle\\Model';
-    const COLLECTION_CLASS = 'EmailBundle\\Model\\EmailTemplateCollection';
-    const MODEL_CLASS = 'EmailBundle\\Model\\EmailTemplate';
-    const PRIMARY_KEY = 'id';
-    const TABLE = 'email_templates';
+
+    const SCHEMA_CLASS = 'EmailBundle\\Model\\EmailTemplateSchema';
+
     const LABEL = 'EmailTemplate';
+
+    const MODEL_NAME = 'EmailTemplate';
+
+    const MODEL_NAMESPACE = 'EmailBundle\\Model';
+
+    const MODEL_CLASS = 'EmailBundle\\Model\\EmailTemplate';
+
+    const REPO_CLASS = 'EmailBundle\\Model\\EmailTemplateRepoBase';
+
+    const COLLECTION_CLASS = 'EmailBundle\\Model\\EmailTemplateCollection';
+
+    const TABLE = 'email_templates';
+
+    const PRIMARY_KEY = 'id';
+
+    const GLOBAL_PRIMARY_KEY = NULL;
+
+    const LOCAL_PRIMARY_KEY = 'id';
+
     public static $column_hash = array (
       'id' => 1,
       'title' => 1,
@@ -22,15 +45,17 @@ class EmailTemplateSchemaProxy
       'handle' => 1,
       'comment' => 1,
       'lang' => 1,
-      'created_on' => 1,
       'updated_on' => 1,
-      'created_by' => 1,
+      'created_on' => 1,
       'updated_by' => 1,
+      'created_by' => 1,
     );
+
     public static $mixin_classes = array (
       0 => 'CommonBundle\\Model\\Mixin\\MetaSchema',
       1 => 'I18N\\Model\\Mixin\\I18NSchema',
     );
+
     public $columnNames = array (
       0 => 'id',
       1 => 'title',
@@ -39,12 +64,14 @@ class EmailTemplateSchemaProxy
       4 => 'handle',
       5 => 'comment',
       6 => 'lang',
-      7 => 'created_on',
-      8 => 'updated_on',
-      9 => 'created_by',
-      10 => 'updated_by',
+      7 => 'updated_on',
+      8 => 'created_on',
+      9 => 'updated_by',
+      10 => 'created_by',
     );
+
     public $primaryKey = 'id';
+
     public $columnNamesIncludeVirtual = array (
       0 => 'id',
       1 => 'title',
@@ -53,25 +80,29 @@ class EmailTemplateSchemaProxy
       4 => 'handle',
       5 => 'comment',
       6 => 'lang',
-      7 => 'created_on',
-      8 => 'updated_on',
-      9 => 'created_by',
-      10 => 'updated_by',
+      7 => 'updated_on',
+      8 => 'created_on',
+      9 => 'updated_by',
+      10 => 'created_by',
     );
+
     public $label = 'EmailTemplate';
-    public $readSourceId = 'default';
-    public $writeSourceId = 'default';
+
+    public $readSourceId = 'master';
+
+    public $writeSourceId = 'master';
+
     public $relations;
+
     public function __construct()
     {
         $this->relations = array( 
-      'created_by' => \LazyRecord\Schema\Relationship\BelongsTo::__set_state(array( 
+      'created_by' => \Maghead\Schema\Relationship\BelongsTo::__set_state(array( 
       'data' => array( 
-          'type' => 3,
-          'self_schema' => 'EmailBundle\\Model\\EmailTemplateSchema',
-          'self_column' => 'created_by',
           'foreign_schema' => 'UserBundle\\Model\\UserSchema',
           'foreign_column' => 'id',
+          'self_schema' => 'EmailBundle\\Model\\EmailTemplateSchema',
+          'self_column' => 'created_by',
         ),
       'accessor' => 'created_by',
       'where' => NULL,
@@ -81,13 +112,12 @@ class EmailTemplateSchemaProxy
       'onDelete' => NULL,
       'usingIndex' => false,
     )),
-      'updated_by' => \LazyRecord\Schema\Relationship\BelongsTo::__set_state(array( 
+      'updated_by' => \Maghead\Schema\Relationship\BelongsTo::__set_state(array( 
       'data' => array( 
-          'type' => 3,
-          'self_schema' => 'EmailBundle\\Model\\EmailTemplateSchema',
-          'self_column' => 'updated_by',
           'foreign_schema' => 'UserBundle\\Model\\UserSchema',
           'foreign_column' => 'id',
+          'self_schema' => 'EmailBundle\\Model\\EmailTemplateSchema',
+          'self_column' => 'updated_by',
         ),
       'accessor' => 'updated_by',
       'where' => NULL,
@@ -251,7 +281,7 @@ class EmailTemplateSchemaProxy
       'attributes' => array( 
           'length' => 12,
           'validValues' => function() {
-                    return array_flip( kernel()->locale->available() );
+                    return array_flip(kernel()->locale->available());
                 },
           'label' => '語言',
           'default' => function() {
@@ -277,7 +307,7 @@ class EmailTemplateSchemaProxy
       'onUpdate' => NULL,
       'length' => 12,
       'validValues' => function() {
-                    return array_flip( kernel()->locale->available() );
+                    return array_flip(kernel()->locale->available());
                 },
       'label' => '語言',
       'default' => function() {
@@ -292,50 +322,17 @@ class EmailTemplateSchemaProxy
           'allow_empty' => true,
         ),
     ));
-        $this->columns[ 'created_on' ] = new RuntimeColumn('created_on',array( 
-      'locales' => NULL,
-      'attributes' => array( 
-          'timezone' => true,
-          'renderAs' => 'DateTimeInput',
-          'widgetAttributes' => array( 
-            ),
-          'label' => '建立時間',
-          'default' => function() {
-                    return new \DateTime;
-                },
-        ),
-      'name' => 'created_on',
-      'primary' => NULL,
-      'unsigned' => NULL,
-      'type' => 'timestamp',
-      'isa' => 'DateTime',
-      'notNull' => false,
-      'enum' => NULL,
-      'set' => NULL,
-      'onUpdate' => NULL,
-      'timezone' => true,
-      'renderAs' => 'DateTimeInput',
-      'widgetAttributes' => array( 
-        ),
-      'label' => '建立時間',
-      'default' => function() {
-                    return new \DateTime;
-                },
-    ));
         $this->columns[ 'updated_on' ] = new RuntimeColumn('updated_on',array( 
       'locales' => NULL,
       'attributes' => array( 
           'timezone' => true,
-          'renderAs' => 'DateTimeInput',
-          'widgetAttributes' => array( 
-            ),
-          'default' => \SQLBuilder\Raw::__set_state(array( 
-      'value' => 'CURRENT_TIMESTAMP',
-    )),
-          'onUpdate' => \SQLBuilder\Raw::__set_state(array( 
+          'default' => \Magsql\Raw::__set_state(array( 
       'value' => 'CURRENT_TIMESTAMP',
     )),
           'label' => '更新時間',
+          'renderAs' => 'DateTimeInput',
+          'widgetAttributes' => array( 
+            ),
         ),
       'name' => 'updated_on',
       'primary' => NULL,
@@ -345,53 +342,47 @@ class EmailTemplateSchemaProxy
       'notNull' => false,
       'enum' => NULL,
       'set' => NULL,
-      'onUpdate' => \SQLBuilder\Raw::__set_state(array( 
+      'onUpdate' => \Magsql\Raw::__set_state(array( 
       'value' => 'CURRENT_TIMESTAMP',
     )),
       'timezone' => true,
-      'renderAs' => 'DateTimeInput',
-      'widgetAttributes' => array( 
-        ),
-      'default' => \SQLBuilder\Raw::__set_state(array( 
+      'default' => \Magsql\Raw::__set_state(array( 
       'value' => 'CURRENT_TIMESTAMP',
     )),
       'label' => '更新時間',
+      'renderAs' => 'DateTimeInput',
+      'widgetAttributes' => array( 
+        ),
     ));
-        $this->columns[ 'created_by' ] = new RuntimeColumn('created_by',array( 
+        $this->columns[ 'created_on' ] = new RuntimeColumn('created_on',array( 
       'locales' => NULL,
       'attributes' => array( 
-          'refer' => 'UserBundle\\Model\\UserSchema',
-          'length' => NULL,
-          'default' => function() {
-                    if (isset($_SESSION)) {
-                        return kernel()->currentUser->id;
-                    }
-                },
-          'renderAs' => 'SelectInput',
+          'timezone' => true,
+          'default' => \Magsql\Raw::__set_state(array( 
+      'value' => 'CURRENT_TIMESTAMP',
+    )),
+          'label' => '建立時間',
+          'renderAs' => 'DateTimeInput',
           'widgetAttributes' => array( 
             ),
-          'label' => '建立者',
         ),
-      'name' => 'created_by',
+      'name' => 'created_on',
       'primary' => NULL,
-      'unsigned' => true,
-      'type' => 'int',
-      'isa' => 'int',
+      'unsigned' => NULL,
+      'type' => 'timestamp',
+      'isa' => 'DateTime',
       'notNull' => NULL,
       'enum' => NULL,
       'set' => NULL,
       'onUpdate' => NULL,
-      'refer' => 'UserBundle\\Model\\UserSchema',
-      'length' => NULL,
-      'default' => function() {
-                    if (isset($_SESSION)) {
-                        return kernel()->currentUser->id;
-                    }
-                },
-      'renderAs' => 'SelectInput',
+      'timezone' => true,
+      'default' => \Magsql\Raw::__set_state(array( 
+      'value' => 'CURRENT_TIMESTAMP',
+    )),
+      'label' => '建立時間',
+      'renderAs' => 'DateTimeInput',
       'widgetAttributes' => array( 
         ),
-      'label' => '建立者',
     ));
         $this->columns[ 'updated_by' ] = new RuntimeColumn('updated_by',array( 
       'locales' => NULL,
@@ -428,6 +419,42 @@ class EmailTemplateSchemaProxy
       'widgetAttributes' => array( 
         ),
       'label' => '更新者',
+    ));
+        $this->columns[ 'created_by' ] = new RuntimeColumn('created_by',array( 
+      'locales' => NULL,
+      'attributes' => array( 
+          'refer' => 'UserBundle\\Model\\UserSchema',
+          'length' => NULL,
+          'default' => function() {
+                    if (isset($_SESSION)) {
+                        return kernel()->currentUser->id;
+                    }
+                },
+          'renderAs' => 'SelectInput',
+          'widgetAttributes' => array( 
+            ),
+          'label' => '建立者',
+        ),
+      'name' => 'created_by',
+      'primary' => NULL,
+      'unsigned' => true,
+      'type' => 'int',
+      'isa' => 'int',
+      'notNull' => NULL,
+      'enum' => NULL,
+      'set' => NULL,
+      'onUpdate' => NULL,
+      'refer' => 'UserBundle\\Model\\UserSchema',
+      'length' => NULL,
+      'default' => function() {
+                    if (isset($_SESSION)) {
+                        return kernel()->currentUser->id;
+                    }
+                },
+      'renderAs' => 'SelectInput',
+      'widgetAttributes' => array( 
+        ),
+      'label' => '建立者',
     ));
     }
 }
